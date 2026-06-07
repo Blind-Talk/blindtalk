@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BlindTalk</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: #0f0f1a; color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; }
+
+    /* EKRAN AVATAR */
+    #screen-avatar { text-align: center; padding: 30px 20px; animation: fadeIn 0.5s ease; }
+    #screen-avatar h1 { font-size: 36px; font-weight: 700; background: linear-gradient(135deg, #e94560, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 8px; }
+    #screen-avatar .subtitle { color: #666; margin-bottom: 36px; font-size: 15px; }
+
+    .avatars { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 30px; max-width: 480px; }
+    .avatar-card { aspect-ratio: 1; background: #1a1a2e; border-radius: 18px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; border: 2px solid transparent; transition: all 0.2s; font-size: 40px; }
+    .avatar-card:hover { border-color: #e94560; transform: scale(1.06); background: #1f1f35; }
+    .avatar-card.selected { border-color: #e94560; background: #2a1030; box-shadow: 0 0 20px rgba(233,69,96,0.3); }
+    .avatar-card span { font-size: 11px; margin-top: 6px; color: #666; font-weight: 500; }
+
+    #name-input-area { margin-bottom: 24px; }
+    #name-input-area input { padding: 12px 20px; border-radius: 12px; border: 2px solid #222; background: #1a1a2e; color: white; font-size: 15px; width: 280px; text-align: center; outline: none; transition: border 0.2s; font-family: 'Inter', sans-serif; }
+    #name-input-area input:focus { border-color: #e94560; }
+    #name-input-area input::placeholder { color: #444; }
+
+    #btn-start { padding: 14px 44px; background: linear-gradient(135deg, #e94560, #a855f7); color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer; opacity: 0.3; pointer-events: none; transition: all 0.3s; font-family: 'Inter', sans-serif; }
+    #btn-start.active { opacity: 1; pointer-events: all; box-shadow: 0 4px 24px rgba(233,69,96,0.4); }
+    #btn-start.active:hover { transform: scale(1.03); }
+
+    /* EKRAN CZATU */
+    #screen-chat { display: none; flex-direction: column; align-items: center; width: 100%; max-width: 560px; padding: 20px; animation: fadeIn 0.4s ease; }
+    #screen-chat h1 { font-size: 26px; font-weight: 700; background: linear-gradient(135deg, #e94560, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 6px; }
+
+    #status { color: #666; margin-bottom: 18px; font-size: 14px; text-align: center; min-height: 20px; }
+
+    #avatars-display { display: flex; gap: 50px; margin-bottom: 18px; }
+    .avatar-box { display: flex; flex-direction: column; align-items: center; }
+    .avatar-emoji { font-size: 58px; transition: all 0.6s; line-height: 1; }
+    .avatar-box .label { font-size: 12px; color: #555; margin-top: 6px; font-weight: 500; }
+    .revealed { font-size: 16px !important; font-weight: 600; color: #e94560; line-height: 1.4; }
+
+    #chat { width: 100%; height: 220px; background: #1a1a2e; border-radius: 14px; padding: 14px; overflow-y: auto; margin-bottom: 10px; border: 1px solid #222; }
+    #chat::-webkit-scrollbar { width: 4px; }
+    #chat::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+
+    .msg-me { text-align: right; margin: 6px 0; }
+    .msg-me span { background: linear-gradient(135deg, #e94560, #a855f7); padding: 8px 14px; border-radius: 18px 18px 4px 18px; font-size: 14px; display: inline-block; max-width: 80%; }
+    .msg-other { text-align: left; margin: 6px 0; }
+    .msg-other span { background: #252535; padding: 8px 14px; border-radius: 18px 18px 18px 4px; font-size: 14px; display: inline-block; max-width: 80%; color: #ccc; }
+    .msg-system { text-align: center; color: #555; font-size: 12px; margin: 8px 0; font-style: italic; }
+
+    #controls { display: flex; gap: 8px; width: 100%; margin-bottom: 10px; }
+    input#input { flex: 1; padding: 12px 16px; border-radius: 12px; border: 2px solid #222; background: #1a1a2e; color: white; font-size: 15px; outline: none; transition: border 0.2s; font-family: 'Inter', sans-serif; }
+    input#input:focus { border-color: #e94560; }
+    button.send { padding: 12px 20px; background: linear-gradient(135deg, #e94560, #a855f7); color: white; border: none; border-radius: 12px; cursor: pointer; font-size: 15px; font-weight: 600; font-family: 'Inter', sans-serif; transition: transform 0.1s; }
+    button.send:active { transform: scale(0.96); }
+
+    #btn-row { display: flex; gap: 10px; width: 100%; }
+    #btn-reveal { flex: 1; padding: 12px; background: transparent; border: 2px solid #e94560; color: #e94560; border-radius: 12px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.3s; font-family: 'Inter', sans-serif; }
+    #btn-reveal:hover:not(:disabled) { background: #e94560; color: white; }
+    #btn-reveal:disabled { opacity: 0.3; cursor: default; border-color: #444; color: #444; }
+    #btn-next { flex: 1; padding: 12px; background: transparent; border: 2px solid #333; color: #888; border-radius: 12px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.3s; font-family: 'Inter', sans-serif; }
+    #btn-next:hover { border-color: #888; color: white; }
+
+    #reveal-status { font-size: 12px; color: #666; margin-top: 8px; text-align: center; min-height: 18px; }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    @media (max-width: 480px) {
+      .avatars { grid-template-columns: repeat(4, 1fr); gap: 10px; }
+      .avatar-card { font-size: 32px; border-radius: 14px; }
+      #avatars-display { gap: 30px; }
+      .avatar-emoji { font-size: 48px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="screen-avatar">
+    <h1>🎭 BlindTalk</h1>
+    <p class="subtitle">Poznaj kogoś nowego — bez oceniania z wyglądu</p>
+    <div class="avatars">
+      <div class="avatar-card" onclick="selectAvatar('🦊', this)">🦊<span>Lis</span></div>
+      <div class="avatar-card" onclick="selectAvatar('🐻', this)">🐻<span>Niedźwiedź</span></div>
+      <div class="avatar-card" onclick="selectAvatar('🐱', this)">🐱<span>Kot</span></div>
+      <div class="avatar-card" onclick="selectAvatar('🐸', this)">🐸<span>Żaba</span></div>
+      <div class="avatar-card" onclick="selectAvatar('🤖', this)">🤖<span>Robot</span></div>
+      <div class="avatar-card" onclick="selectAvatar('🦄', this)">🦄<span>Jednorożec</span></div>
+      <div class="avatar-card" onclick="selectAvatar('👻', this)">👻<span>Duch</span></div>
+      <div class="avatar-card" onclick="selectAvatar('🧙', this)">🧙<span>Czarodziej</span></div>
+    </div>
+    <div id="name-input-area">
+      <input id="my-name" type="text" placeholder="Twoje imię" maxlength="20" oninput="checkReady()" />
+    </div>
+    <button id="btn-start" onclick="startChat()">Szukaj rozmówcy →</button>
+  </div>
+
+  <div id="screen-chat">
+    <h1>🎭 BlindTalk</h1>
+    <div id="status">Łączenie...</div>
+    <div id="avatars-display">
+      <div class="avatar-box">
+        <div class="avatar-emoji" id="my-avatar-display"></div>
+        <div class="label">Ty</div>
+      </div>
+      <div class="avatar-box">
+        <div class="avatar-emoji" id="other-avatar-display">❓</div>
+        <div class="label">Rozmówca</div>
+      </div>
+    </div>
+    <div id="chat"></div>
+    <div id="controls" style="display:none">
+      <input id="input" placeholder="Napisz wiadomość..." />
+      <button class="send" onclick="send()">Wyślij</button>
+    </div>
+    <div id="btn-row" style="display:none">
+      <button id="btn-reveal" onclick="requestReveal()">👁️ Odkryj twarz</button>
+      <button id="btn-next" onclick="nextChat()">⏭️ Następny</button>
+    </div>
+    <div id="reveal-status"></div>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+    let myRoom = null;
+    let myAvatar = null;
+    let myName = null;
+    let iWantReveal = false;
+    let otherWantsReveal = false;
+
+    function selectAvatar(emoji, el) {
+      myAvatar = emoji;
+      document.querySelectorAll('.avatar-card').forEach(c => c.classList.remove('selected'));
+      el.classList.add('selected');
+      checkReady();
+    }
+
+    function checkReady() {
+      const name = document.getElementById('my-name').value.trim();
+      const btn = document.getElementById('btn-start');
+      if (myAvatar && name.length > 0) btn.classList.add('active');
+      else btn.classList.remove('active');
+    }
+
+    function startChat() {
+      myName = document.getElementById('my-name').value.trim();
+      document.getElementById('screen-avatar').style.display = 'none';
+      document.getElementById('screen-chat').style.display = 'flex';
+      document.getElementById('my-avatar-display').textContent = myAvatar;
+      socket.emit('join', { avatar: myAvatar, name: myName });
+    }
+
+    function resetChat() {
+      iWantReveal = false;
+      otherWantsReveal = false;
+      document.getElementById('chat').innerHTML = '';
+      document.getElementById('other-avatar-display').textContent = '❓';
+      document.getElementById('other-avatar-display').className = 'avatar-emoji';
+      document.getElementById('my-avatar-display').textContent = myAvatar;
+      document.getElementById('my-avatar-display').className = 'avatar-emoji';
+      document.getElementById('btn-reveal').disabled = false;
+      document.getElementById('reveal-status').textContent = '';
+    }
+
+    socket.on('waiting', () => {
+      document.getElementById('status').textContent = '⏳ Czekam na rozmówcę...';
+      document.getElementById('controls').style.display = 'none';
+      document.getElementById('btn-row').style.display = 'none';
+    });
+
+    socket.on('paired', (data) => {
+      myRoom = data.room;
+      resetChat();
+      document.getElementById('status').textContent = '🎭 Połączono! Rozmawiasz z ' + data.otherAvatar;
+      document.getElementById('other-avatar-display').textContent = data.otherAvatar;
+      document.getElementById('controls').style.display = 'flex';
+      document.getElementById('btn-row').style.display = 'flex';
+    });
+
+    socket.on('message', (data) => {
+      const chat = document.getElementById('chat');
+      chat.innerHTML += `<div class="msg-other"><span>${data.avatar} ${data.text}</span></div>`;
+      chat.scrollTop = chat.scrollHeight;
+    });
+
+    socket.on('reveal-request', () => {
+      otherWantsReveal = true;
+      document.getElementById('reveal-status').textContent = '🔔 Rozmówca chce odkryć twarz!';
+      checkBothRevealed();
+    });
+
+    socket.on('both-revealed', (data) => {
+      document.getElementById('my-avatar-display').textContent = myAvatar + '\n' + myName;
+      document.getElementById('my-avatar-display').classList.add('revealed');
+      document.getElementById('other-avatar-display').textContent = data.otherAvatar + '\n' + data.otherName;
+      document.getElementById('other-avatar-display').classList.add('revealed');
+      document.getElementById('status').textContent = '🎉 Twarze odkryte!';
+      document.getElementById('btn-reveal').disabled = true;
+      document.getElementById('reveal-status').textContent = '';
+      const chat = document.getElementById('chat');
+      chat.innerHTML += `<div class="msg-system">🎉 Poznajesz: ${data.otherAvatar} <b>${data.otherName}</b></div>`;
+      chat.scrollTop = chat.scrollHeight;
+    });
+
+    socket.on('partner-left', () => {
+      const chat = document.getElementById('chat');
+      chat.innerHTML += `<div class="msg-system">⚠️ Rozmówca się rozłączył.</div>`;
+      document.getElementById('status').textContent = '⚠️ Szukam nowego rozmówcy...';
+      myRoom = null;
+      resetChat();
+      socket.emit('join', { avatar: myAvatar, name: myName });
+    });
+
+    function requestReveal() {
+      if (iWantReveal) return;
+      iWantReveal = true;
+      socket.emit('reveal-request', { room: myRoom });
+      document.getElementById('reveal-status').textContent = '⏳ Czekam aż rozmówca też kliknie...';
+      checkBothRevealed();
+    }
+
+    function checkBothRevealed() {
+      if (iWantReveal && otherWantsReveal) {
+        socket.emit('both-revealed', { room: myRoom, name: myName, avatar: myAvatar });
+      }
+    }
+
+    function nextChat() {
+      if (myRoom) socket.emit('next', { room: myRoom });
+      myRoom = null;
+      resetChat();
+      document.getElementById('status').textContent = '⏳ Szukam nowego rozmówcy...';
+      document.getElementById('controls').style.display = 'none';
+      document.getElementById('btn-row').style.display = 'none';
+      socket.emit('join', { avatar: myAvatar, name: myName });
+    }
+
+    function send() {
+      const input = document.getElementById('input');
+      const text = input.value.trim();
+      if (!text || !myRoom) return;
+      socket.emit('message', { room: myRoom, text, avatar: myAvatar });
+      const chat = document.getElementById('chat');
+      chat.innerHTML += `<div class="msg-me"><span>Ty: ${text}</span></div>`;
+      chat.scrollTop = chat.scrollHeight;
+      input.value = '';
+    }
+
+    document.getElementById('input')?.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') send();
+    });
+  </script>
+</body>
+</html>
