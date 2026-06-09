@@ -9,7 +9,8 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Inter', sans-serif; background: #0f0f1a; color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
 
-    #screen-avatar { text-align: center; padding: 20px; animation: fadeIn 0.5s ease; max-width: 520px; width: 100%; }
+    #screen-terms { max-width: 520px; width: 100%; animation: fadeIn 0.5s ease; }
+    #screen-avatar { display: none; text-align: center; padding: 20px; animation: fadeIn 0.5s ease; max-width: 520px; width: 100%; }
     #screen-avatar h1 { font-size: 36px; font-weight: 700; background: linear-gradient(135deg, #e94560, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 8px; }
     #screen-avatar .subtitle { color: #666; margin-bottom: 24px; font-size: 15px; }
 
@@ -92,6 +93,55 @@
 </head>
 <body>
 
+  <!-- Ekran regulaminu -->
+  <div id="screen-terms">
+    <div style="text-align: center; margin-bottom: 24px;">
+      <h1 style="font-size: 36px; font-weight: 700; background: linear-gradient(135deg, #e94560, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 8px;">🎭 BlindTalk</h1>
+      <p style="color: #666; font-size: 15px;">Zanim zaczniesz, przeczytaj regulamin</p>
+    </div>
+    <div style="background: #1a1a2e; border-radius: 14px; padding: 20px; margin-bottom: 20px; border: 1px solid #222; max-height: 300px; overflow-y: auto;">
+      <h2 style="font-size: 16px; color: #a855f7; margin-bottom: 12px;">📋 Regulamin BlindTalk</h2>
+      <p style="color: #aaa; font-size: 13px; line-height: 1.7; margin-bottom: 10px;">
+        <strong style="color: white;">1. Wiek minimalny</strong><br>
+        Korzystanie z BlindTalk jest dozwolone wyłącznie dla osób, które ukończyły 16 lat. Osoby poniżej 16 roku życia nie mogą korzystać z aplikacji.
+      </p>
+      <p style="color: #aaa; font-size: 13px; line-height: 1.7; margin-bottom: 10px;">
+        <strong style="color: white;">2. Zasady zachowania</strong><br>
+        Zabrania się wysyłania treści obraźliwych, wulgarnych, rasistowskich, dyskryminujących lub niezgodnych z prawem. Użytkownicy zobowiązują się do traktowania rozmówców z szacunkiem.
+      </p>
+      <p style="color: #aaa; font-size: 13px; line-height: 1.7; margin-bottom: 10px;">
+        <strong style="color: white;">3. Tryb 18+</strong><br>
+        Treści dla dorosłych są dostępne wyłącznie po obopólnej zgodzie obu użytkowników i tylko dla osób pełnoletnich. Udostępnianie takich treści osobom niepełnoletnim jest surowo zabronione.
+      </p>
+      <p style="color: #aaa; font-size: 13px; line-height: 1.7; margin-bottom: 10px;">
+        <strong style="color: white;">4. Prywatność</strong><br>
+        BlindTalk nie przechowuje historii rozmów. Twoje imię jest widoczne tylko po obopólnej zgodzie na odkrycie tożsamości. Nie udostępniaj danych osobowych nieznajomym.
+      </p>
+      <p style="color: #aaa; font-size: 13px; line-height: 1.7; margin-bottom: 10px;">
+        <strong style="color: white;">5. Odpowiedzialność</strong><br>
+        BlindTalk nie ponosi odpowiedzialności za treści wysyłane przez użytkowników. Każdy użytkownik odpowiada za swoje zachowanie zgodnie z obowiązującym prawem.
+      </p>
+      <p style="color: #aaa; font-size: 13px; line-height: 1.7;">
+        <strong style="color: white;">6. Naruszenia</strong><br>
+        W przypadku naruszenia regulaminu BlindTalk zastrzega sobie prawo do zablokowania dostępu bez ostrzeżenia.
+      </p>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px;">
+      <label style="display: flex; align-items: center; gap: 12px; cursor: pointer; background: #1a1a2e; padding: 14px; border-radius: 12px; border: 1px solid #222;">
+        <input type="checkbox" id="check-age" onchange="checkTerms()" style="width: 20px; height: 20px; cursor: pointer; accent-color: #a855f7;">
+        <span style="color: #aaa; font-size: 14px;">Potwierdzam, że mam ukończone <strong style="color: white;">16 lat</strong></span>
+      </label>
+      <label style="display: flex; align-items: center; gap: 12px; cursor: pointer; background: #1a1a2e; padding: 14px; border-radius: 12px; border: 1px solid #222;">
+        <input type="checkbox" id="check-terms" onchange="checkTerms()" style="width: 20px; height: 20px; cursor: pointer; accent-color: #a855f7;">
+        <span style="color: #aaa; font-size: 14px;">Przeczytałem/am i akceptuję <strong style="color: white;">regulamin</strong></span>
+      </label>
+    </div>
+    <button id="btn-accept" onclick="acceptTerms()" style="width: 100%; padding: 14px; background: linear-gradient(135deg, #e94560, #a855f7); color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer; opacity: 0.3; pointer-events: none; transition: all 0.3s; font-family: 'Inter', sans-serif;">
+      Akceptuję i wchodzę →
+    </button>
+  </div>
+
+  <!-- Ekran wyboru awatara -->
   <div id="screen-avatar">
     <h1>🎭 BlindTalk</h1>
     <p class="subtitle">Poznaj kogoś nowego — bez oceniania z wyglądu</p>
@@ -130,6 +180,7 @@
     <button id="btn-start" onclick="startChat()">Szukaj rozmówcy →</button>
   </div>
 
+  <!-- Ekran czatu -->
   <div id="screen-chat">
     <h1>🎭 BlindTalk</h1>
     <div id="status">Łączenie...</div>
@@ -261,6 +312,26 @@
       ['😂 Komedia', '😱 Horror'],
       ['🤝 Praca zespołowa', '🧍 Solo']
     ];
+
+    function checkTerms() {
+      const age = document.getElementById('check-age').checked;
+      const terms = document.getElementById('check-terms').checked;
+      const btn = document.getElementById('btn-accept');
+      if (age && terms) {
+        btn.style.opacity = '1';
+        btn.style.pointerEvents = 'all';
+        btn.style.boxShadow = '0 4px 24px rgba(233,69,96,0.4)';
+      } else {
+        btn.style.opacity = '0.3';
+        btn.style.pointerEvents = 'none';
+        btn.style.boxShadow = 'none';
+      }
+    }
+
+    function acceptTerms() {
+      document.getElementById('screen-terms').style.display = 'none';
+      document.getElementById('screen-avatar').style.display = 'block';
+    }
 
     function selectAvatar(emoji, el) {
       myAvatar = emoji;
