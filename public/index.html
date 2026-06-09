@@ -7,37 +7,53 @@
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Inter', sans-serif; background: #0f0f1a; color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; }
+    body { font-family: 'Inter', sans-serif; background: #0f0f1a; color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
 
-    #screen-avatar { text-align: center; padding: 30px 20px; animation: fadeIn 0.5s ease; }
+    #screen-avatar { text-align: center; padding: 20px; animation: fadeIn 0.5s ease; max-width: 520px; width: 100%; }
     #screen-avatar h1 { font-size: 36px; font-weight: 700; background: linear-gradient(135deg, #e94560, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 8px; }
-    #screen-avatar .subtitle { color: #666; margin-bottom: 36px; font-size: 15px; }
+    #screen-avatar .subtitle { color: #666; margin-bottom: 24px; font-size: 15px; }
 
-    .avatars { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 30px; max-width: 480px; }
-    .avatar-card { aspect-ratio: 1; background: #1a1a2e; border-radius: 18px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; border: 2px solid transparent; transition: all 0.2s; font-size: 40px; }
-    .avatar-card:hover { border-color: #e94560; transform: scale(1.06); background: #1f1f35; }
-    .avatar-card.selected { border-color: #e94560; background: #2a1030; box-shadow: 0 0 20px rgba(233,69,96,0.3); }
-    .avatar-card span { font-size: 11px; margin-top: 6px; color: #666; font-weight: 500; }
+    .section-label { font-size: 12px; color: #555; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; text-align: left; }
 
-    #name-input-area { margin-bottom: 24px; }
-    #name-input-area input { padding: 12px 20px; border-radius: 12px; border: 2px solid #222; background: #1a1a2e; color: white; font-size: 15px; width: 280px; text-align: center; outline: none; transition: border 0.2s; font-family: 'Inter', sans-serif; }
+    .avatars { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px; }
+    .avatar-card { aspect-ratio: 1; background: #1a1a2e; border-radius: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; border: 2px solid transparent; transition: all 0.2s; font-size: 36px; }
+    .avatar-card:hover { border-color: #e94560; transform: scale(1.04); }
+    .avatar-card.selected { border-color: #e94560; background: #2a1030; box-shadow: 0 0 16px rgba(233,69,96,0.3); }
+    .avatar-card span { font-size: 10px; margin-top: 4px; color: #666; }
+
+    .gender-row { display: flex; gap: 10px; margin-bottom: 20px; }
+    .gender-btn { flex: 1; padding: 12px; background: #1a1a2e; border: 2px solid transparent; border-radius: 12px; color: #666; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: 'Inter', sans-serif; }
+    .gender-btn:hover { border-color: #a855f7; color: white; }
+    .gender-btn.selected { border-color: #a855f7; background: #1a0a2e; color: white; }
+
+    .looking-row { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+    .looking-btn { flex: 1; min-width: 80px; padding: 10px; background: #1a1a2e; border: 2px solid transparent; border-radius: 12px; color: #666; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: 'Inter', sans-serif; }
+    .looking-btn:hover { border-color: #e94560; color: white; }
+    .looking-btn.selected { border-color: #e94560; background: #2a1030; color: white; }
+
+    .filter-row { display: flex; gap: 10px; margin-bottom: 20px; }
+    .filter-select { flex: 1; padding: 12px; background: #1a1a2e; border: 2px solid #222; border-radius: 12px; color: white; font-size: 14px; font-family: 'Inter', sans-serif; outline: none; cursor: pointer; }
+    .filter-select:focus { border-color: #a855f7; }
+    .filter-select option { background: #1a1a2e; }
+
+    #name-input-area { margin-bottom: 20px; }
+    #name-input-area input { padding: 12px 20px; border-radius: 12px; border: 2px solid #222; background: #1a1a2e; color: white; font-size: 15px; width: 100%; text-align: center; outline: none; transition: border 0.2s; font-family: 'Inter', sans-serif; }
     #name-input-area input:focus { border-color: #e94560; }
     #name-input-area input::placeholder { color: #444; }
 
-    #btn-start { padding: 14px 44px; background: linear-gradient(135deg, #e94560, #a855f7); color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer; opacity: 0.3; pointer-events: none; transition: all 0.3s; font-family: 'Inter', sans-serif; }
+    #btn-start { width: 100%; padding: 14px; background: linear-gradient(135deg, #e94560, #a855f7); color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer; opacity: 0.3; pointer-events: none; transition: all 0.3s; font-family: 'Inter', sans-serif; }
     #btn-start.active { opacity: 1; pointer-events: all; box-shadow: 0 4px 24px rgba(233,69,96,0.4); }
-    #btn-start.active:hover { transform: scale(1.03); }
 
-    #screen-chat { display: none; flex-direction: column; align-items: center; width: 100%; max-width: 560px; padding: 20px; animation: fadeIn 0.4s ease; }
-    #screen-chat h1 { font-size: 26px; font-weight: 700; background: linear-gradient(135deg, #e94560, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 6px; }
+    #screen-chat { display: none; flex-direction: column; align-items: center; width: 100%; max-width: 560px; padding: 10px; animation: fadeIn 0.4s ease; }
+    #screen-chat h1 { font-size: 24px; font-weight: 700; background: linear-gradient(135deg, #e94560, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 6px; }
 
-    #status { color: #666; margin-bottom: 14px; font-size: 14px; text-align: center; min-height: 20px; }
+    #status { color: #666; margin-bottom: 12px; font-size: 14px; text-align: center; min-height: 20px; }
 
-    #avatars-display { display: flex; gap: 50px; margin-bottom: 14px; }
+    #avatars-display { display: flex; gap: 50px; margin-bottom: 12px; }
     .avatar-box { display: flex; flex-direction: column; align-items: center; }
-    .avatar-emoji { font-size: 52px; transition: all 0.6s; line-height: 1; }
-    .avatar-box .label { font-size: 12px; color: #555; margin-top: 6px; font-weight: 500; }
-    .revealed { font-size: 16px !important; font-weight: 600; color: #e94560; line-height: 1.4; }
+    .avatar-emoji { font-size: 48px; transition: all 0.6s; line-height: 1; }
+    .avatar-box .label { font-size: 11px; color: #555; margin-top: 4px; }
+    .revealed { font-size: 15px !important; font-weight: 600; color: #e94560; line-height: 1.4; }
 
     #chat { width: 100%; height: 220px; background: #1a1a2e; border-radius: 14px; padding: 14px; overflow-y: auto; margin-bottom: 10px; border: 1px solid #222; }
     #chat::-webkit-scrollbar { width: 4px; }
@@ -50,32 +66,33 @@
     .msg-system { text-align: center; color: #555; font-size: 12px; margin: 8px 0; font-style: italic; }
     .msg-game { background: #1a1a2e; border: 1px solid #333; border-radius: 12px; padding: 12px; margin: 8px 0; text-align: center; }
     .msg-game .game-title { font-size: 12px; color: #a855f7; font-weight: 600; margin-bottom: 6px; }
+    .msg-game .game-title-18 { font-size: 12px; color: #ff6b35; font-weight: 600; margin-bottom: 6px; }
     .msg-game .game-content { font-size: 15px; color: white; }
 
-    #controls { display: flex; gap: 8px; width: 100%; margin-bottom: 10px; }
+    #controls { display: flex; gap: 8px; width: 100%; margin-bottom: 8px; }
     input#input { flex: 1; padding: 12px 16px; border-radius: 12px; border: 2px solid #222; background: #1a1a2e; color: white; font-size: 15px; outline: none; transition: border 0.2s; font-family: 'Inter', sans-serif; }
     input#input:focus { border-color: #e94560; }
     button.send { padding: 12px 20px; background: linear-gradient(135deg, #e94560, #a855f7); color: white; border: none; border-radius: 12px; cursor: pointer; font-size: 15px; font-weight: 600; font-family: 'Inter', sans-serif; }
 
-    #btn-row { display: flex; gap: 8px; width: 100%; margin-bottom: 8px; flex-wrap: wrap; }
+    #btn-row { display: flex; gap: 8px; width: 100%; margin-bottom: 8px; }
     #btn-reveal { flex: 1; padding: 10px; background: transparent; border: 2px solid #e94560; color: #e94560; border-radius: 12px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.3s; font-family: 'Inter', sans-serif; }
     #btn-reveal:hover:not(:disabled) { background: #e94560; color: white; }
     #btn-reveal:disabled { opacity: 0.3; cursor: default; border-color: #444; color: #444; }
     #btn-next { flex: 1; padding: 10px; background: transparent; border: 2px solid #333; color: #888; border-radius: 12px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.3s; font-family: 'Inter', sans-serif; }
     #btn-next:hover { border-color: #888; color: white; }
 
-    #games-row { display: flex; gap: 8px; width: 100%; margin-bottom: 8px; }
+    #games-row { display: flex; gap: 8px; width: 100%; margin-bottom: 6px; flex-wrap: wrap; }
     .btn-game { flex: 1; padding: 10px; background: transparent; border: 2px solid #a855f7; color: #a855f7; border-radius: 12px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.3s; font-family: 'Inter', sans-serif; }
     .btn-game:hover { background: #a855f7; color: white; }
+
+    #games-row-18 { display: flex; width: 100%; margin-bottom: 8px; }
+    .btn-game-18 { width: 100%; padding: 10px; background: transparent; border: 2px solid #ff6b35; color: #ff6b35; border-radius: 12px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.3s; font-family: 'Inter', sans-serif; }
+    .btn-game-18:hover { background: #ff6b35; color: white; }
+    .btn-game-18.active { background: #ff6b35; color: white; }
 
     #reveal-status { font-size: 12px; color: #666; margin-top: 4px; text-align: center; min-height: 18px; }
 
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-    @media (max-width: 480px) {
-      .avatars { grid-template-columns: repeat(4, 1fr); gap: 10px; }
-      .avatar-card { font-size: 32px; border-radius: 14px; }
-    }
   </style>
 </head>
 <body>
@@ -83,6 +100,8 @@
   <div id="screen-avatar">
     <h1>🎭 BlindTalk</h1>
     <p class="subtitle">Poznaj kogoś nowego — bez oceniania z wyglądu</p>
+
+    <div class="section-label">Wybierz awatara</div>
     <div class="avatars">
       <div class="avatar-card" onclick="selectAvatar('🦊', this)">🦊<span>Lis</span></div>
       <div class="avatar-card" onclick="selectAvatar('🐻', this)">🐻<span>Niedźwiedź</span></div>
@@ -93,9 +112,68 @@
       <div class="avatar-card" onclick="selectAvatar('👻', this)">👻<span>Duch</span></div>
       <div class="avatar-card" onclick="selectAvatar('🧙', this)">🧙<span>Czarodziej</span></div>
     </div>
-    <div id="name-input-area">
-      <input id="my-name" type="text" placeholder="Twoje imię" maxlength="20" oninput="checkReady()" />
+
+    <div class="section-label">Kim jesteś?</div>
+    <div class="gender-row">
+      <button class="gender-btn" onclick="selectGender('male', this)">👨 Mężczyzna</button>
+      <button class="gender-btn" onclick="selectGender('female', this)">👩 Kobieta</button>
+      <button class="gender-btn" onclick="selectGender('other', this)">🧑 Inne</button>
     </div>
+
+    <div class="section-label">Szukasz?</div>
+    <div class="looking-row">
+      <button class="looking-btn" onclick="selectLooking('male', this)">👨 Mężczyzny</button>
+      <button class="looking-btn" onclick="selectLooking('female', this)">👩 Kobiety</button>
+      <button class="looking-btn" onclick="selectLooking('any', this)">🌍 Kogokolwiek</button>
+    </div>
+
+    <div class="section-label">Język i kraj</div>
+    <div class="filter-row">
+      <select class="filter-select" id="select-language" onchange="checkReady()">
+        <option value="any">🌍 Dowolny język</option>
+        <option value="pl">🇵🇱 Polski</option>
+        <option value="en">🇬🇧 English</option>
+        <option value="de">🇩🇪 Deutsch</option>
+        <option value="fr">🇫🇷 Français</option>
+        <option value="es">🇪🇸 Español</option>
+        <option value="it">🇮🇹 Italiano</option>
+        <option value="ru">🇷🇺 Русский</option>
+        <option value="ua">🇺🇦 Українська</option>
+      </select>
+      <select class="filter-select" id="select-country" onchange="checkReady()">
+        <option value="any">🌍 Dowolny kraj</option>
+        <option value="PL">🇵🇱 Polska</option>
+        <option value="US">🇺🇸 USA</option>
+        <option value="GB">🇬🇧 UK</option>
+        <option value="DE">🇩🇪 Niemcy</option>
+        <option value="FR">🇫🇷 Francja</option>
+        <option value="ES">🇪🇸 Hiszpania</option>
+        <option value="IT">🇮🇹 Włochy</option>
+        <option value="UA">🇺🇦 Ukraina</option>
+        <option value="RU">🇷🇺 Rosja</option>
+        <option value="CZ">🇨🇿 Czechy</option>
+        <option value="SK">🇸🇰 Słowacja</option>
+        <option value="HU">🇭🇺 Węgry</option>
+        <option value="RO">🇷🇴 Rumunia</option>
+        <option value="NL">🇳🇱 Holandia</option>
+        <option value="SE">🇸🇪 Szwecja</option>
+        <option value="NO">🇳🇴 Norwegia</option>
+        <option value="DK">🇩🇰 Dania</option>
+        <option value="FI">🇫🇮 Finlandia</option>
+        <option value="TR">🇹🇷 Turcja</option>
+        <option value="BR">🇧🇷 Brazylia</option>
+        <option value="IN">🇮🇳 Indie</option>
+        <option value="JP">🇯🇵 Japonia</option>
+        <option value="KR">🇰🇷 Korea</option>
+        <option value="CN">🇨🇳 Chiny</option>
+      </select>
+    </div>
+
+    <div class="section-label">Twoje imię</div>
+    <div id="name-input-area">
+      <input id="my-name" type="text" placeholder="Wpisz imię..." maxlength="20" oninput="checkReady()" />
+    </div>
+    <br>
     <button id="btn-start" onclick="startChat()">Szukaj rozmówcy →</button>
   </div>
 
@@ -122,6 +200,9 @@
       <button class="btn-game" onclick="playThisOrThat()">🃏 Ten czy Tamten</button>
       <button class="btn-game" onclick="playRPS()">✂️ Kamień Nożyce</button>
     </div>
+    <div id="games-row-18" style="display:none">
+      <button class="btn-game-18" id="btn-18" onclick="request18()">🔞 Tryb 18+ (wymaga zgody)</button>
+    </div>
     <div id="btn-row" style="display:none">
       <button id="btn-reveal" onclick="requestReveal()">👁️ Odkryj twarz</button>
       <button id="btn-next" onclick="nextChat()">⏭️ Następny</button>
@@ -134,20 +215,40 @@
     const socket = io();
     let myRoom = null;
     let myAvatar = null;
+    let myGender = null;
+    let myLooking = null;
     let myName = null;
     let iWantReveal = false;
     let otherWantsReveal = false;
-    let rpsChoice = null;
+    let i18want = false;
+    let i18other = false;
 
     const truthQuestions = [
       'Jaką masz największą życiową ambicję?',
       'Co jest Twoim największym lękiem?',
-      'Jaką masz ukrytą talent?',
+      'Jaką masz ukryty talent?',
       'Co chciałbyś zmienić w swoim życiu?',
       'Jaką masz najbardziej zawstydzającą historię?',
       'Co cię najbardziej śmieszy?',
       'Jakie jest Twoje największe marzenie?',
-      'Gdybyś mógł podróżować w czasie, dokąd byś poszedł?'
+      'Gdybyś mógł podróżować w czasie, dokąd byś poszedł?',
+      'Co byś zrobił gdybyś wygrał milion złotych?',
+      'Jaka jest Twoja największa wada?',
+      'Co myślisz o sobie czego inni nie wiedzą?',
+      'Jaką osobę najbardziej podziwiasz i dlaczego?',
+      'Gdybyś mógł być kimś innym przez jeden dzień, kim byś był?',
+      'Co sprawia że czujesz się naprawdę szczęśliwy?',
+      'Jaka jest Twoja najbardziej żenująca piosenka w playliście?',
+      'Co byś zabrał na bezludną wyspę?',
+      'Jaką umiejętność chciałbyś opanować?',
+      'Jaki był najgorszy prezent jaki dostałeś?',
+      'Co zrobiłeś ostatnio po raz pierwszy?',
+      'Gdybyś miał supermoce, jakie byś wybrał?',
+      'Jaki film oglądałeś więcej niż 3 razy?',
+      'Co jest Twoim guilty pleasure?',
+      'Jakie masz dziwne przyzwyczajenie?',
+      'Gdybyś mógł cofnąć jedną decyzję, którą byś cofnął?',
+      'Co chciałbyś powiedzieć swojemu młodszemu ja?'
     ];
 
     const dares = [
@@ -156,7 +257,33 @@
       'Napisz coś śmiesznego po angielsku!',
       'Wyślij najdziwniejsze słowo które znasz!',
       'Opisz siebie jako postać z bajki!',
-      'Napisz haiku o pogodzie za oknem!'
+      'Napisz haiku o pogodzie za oknem!',
+      'Wymyśl nowe słowo i podaj jego definicję!',
+      'Napisz krótką reklamę swojego awatara!',
+      'Opisz swój dzień jakbyś był detektywem!',
+      'Wymyśl tytuł książki o swoim życiu!',
+      'Napisz SMS do wyimaginowanej osoby z przyszłości!',
+      'Opisz idealne śniadanie w 5 słowach!',
+      'Wymyśl nową dyscyplinę olimpijską!',
+      'Opisz swój charakter trzema zwierzętami!'
+    ];
+
+    const truthQuestions18 = [
+      'Jaka jest Twoja największa seksualna fantazja?',
+      'Kiedy ostatnio miałeś/miałaś "to"?',
+      'Jaki jest Twój największy wstyd związany z randkami?',
+      'Co jest dla Ciebie absolutnym dealbreakerem w związku?',
+      'Jaki jest Twój typ idealnego partnera/partnerki?',
+      'Jakie jest Twoje najbardziej szalone doświadczenie?',
+      'Co jest dla Ciebie największą atrakcją u drugiej osoby?',
+      'Jaką masz najbardziej wstydliwą wiadomość w telefonie?',
+      'Gdybyś mógł/mogła spędzić noc z celebrytą, kto by to był?',
+      'Jakie jest Twoje największe tabu które chciałbyś przełamać?',
+      'Co myślisz o związkach otwartych?',
+      'Jaka jest Twoja granica której nigdy nie przekroczysz?',
+      'Co sprawiło że zakochałeś/zakochałaś się po raz pierwszy?',
+      'Jakie jest Twoje ulubione miejsce do całowania?',
+      'Co jest dla Ciebie najbardziej romantyczne?'
     ];
 
     const thisOrThat = [
@@ -167,7 +294,19 @@
       ['🏖️ Plaża', '🏔️ Góry'],
       ['🐱 Kot', '🐶 Pies'],
       ['📱 Telefon', '💻 Komputer'],
-      ['🎵 Muzyka', '🎮 Gry']
+      ['🎵 Muzyka', '🎮 Gry'],
+      ['🌧️ Deszcz', '☀️ Słońce'],
+      ['🍦 Lody', '🍰 Ciasto'],
+      ['🚗 Auto', '🚆 Pociąg'],
+      ['📚 Książka', '🎧 Podcast'],
+      ['🏠 Dom', '✈️ Podróż'],
+      ['💬 SMS', '📞 Telefon'],
+      ['🌃 Miasto', '🌿 Wieś'],
+      ['🎤 Śpiew', '💃 Taniec'],
+      ['🍺 Piwo', '🍷 Wino'],
+      ['⚽ Sport', '🎨 Sztuka'],
+      ['😂 Komedia', '😱 Horror'],
+      ['🤝 Praca zespołowa', '🧍 Solo']
     ];
 
     function selectAvatar(emoji, el) {
@@ -177,25 +316,42 @@
       checkReady();
     }
 
+    function selectGender(gender, el) {
+      myGender = gender;
+      document.querySelectorAll('.gender-btn').forEach(c => c.classList.remove('selected'));
+      el.classList.add('selected');
+      checkReady();
+    }
+
+    function selectLooking(looking, el) {
+      myLooking = looking;
+      document.querySelectorAll('.looking-btn').forEach(c => c.classList.remove('selected'));
+      el.classList.add('selected');
+      checkReady();
+    }
+
     function checkReady() {
       const name = document.getElementById('my-name').value.trim();
       const btn = document.getElementById('btn-start');
-      if (myAvatar && name.length > 0) btn.classList.add('active');
+      if (myAvatar && myGender && myLooking && name.length > 0) btn.classList.add('active');
       else btn.classList.remove('active');
     }
 
     function startChat() {
       myName = document.getElementById('my-name').value.trim();
+      const language = document.getElementById('select-language').value;
+      const country = document.getElementById('select-country').value;
       document.getElementById('screen-avatar').style.display = 'none';
       document.getElementById('screen-chat').style.display = 'flex';
       document.getElementById('my-avatar-display').textContent = myAvatar;
-      socket.emit('join', { avatar: myAvatar, name: myName });
+      socket.emit('join', { avatar: myAvatar, name: myName, gender: myGender, lookingFor: myLooking, language, country });
     }
 
     function resetChat() {
       iWantReveal = false;
       otherWantsReveal = false;
-      rpsChoice = null;
+      i18want = false;
+      i18other = false;
       document.getElementById('chat').innerHTML = '';
       document.getElementById('other-avatar-display').textContent = '❓';
       document.getElementById('other-avatar-display').className = 'avatar-emoji';
@@ -203,6 +359,15 @@
       document.getElementById('my-avatar-display').className = 'avatar-emoji';
       document.getElementById('btn-reveal').disabled = false;
       document.getElementById('reveal-status').textContent = '';
+      document.getElementById('btn-18').textContent = '🔞 Tryb 18+ (wymaga zgody)';
+      document.getElementById('btn-18').classList.remove('active');
+      document.getElementById('btn-18').onclick = request18;
+    }
+
+    function addSystemMsg(text) {
+      const chat = document.getElementById('chat');
+      chat.innerHTML += `<div class="msg-system">${text}</div>`;
+      chat.scrollTop = chat.scrollHeight;
     }
 
     socket.on('waiting', () => {
@@ -210,16 +375,19 @@
       document.getElementById('controls').style.display = 'none';
       document.getElementById('btn-row').style.display = 'none';
       document.getElementById('games-row').style.display = 'none';
+      document.getElementById('games-row-18').style.display = 'none';
     });
 
     socket.on('paired', (data) => {
       myRoom = data.room;
       resetChat();
-      document.getElementById('status').textContent = '🎭 Połączono! Rozmawiasz z ' + data.otherAvatar;
+      const genderIcon = data.otherGender === 'male' ? '👨' : data.otherGender === 'female' ? '👩' : '🧑';
+      document.getElementById('status').textContent = `🎭 Połączono! Rozmawiasz z ${genderIcon} ${data.otherAvatar}`;
       document.getElementById('other-avatar-display').textContent = data.otherAvatar;
       document.getElementById('controls').style.display = 'flex';
       document.getElementById('btn-row').style.display = 'flex';
       document.getElementById('games-row').style.display = 'flex';
+      document.getElementById('games-row-18').style.display = 'flex';
     });
 
     socket.on('message', (data) => {
@@ -231,7 +399,9 @@
     socket.on('game-event', (data) => {
       const chat = document.getElementById('chat');
       if (data.type === 'truth-or-dare') {
-        chat.innerHTML += `<div class="msg-game"><div class="game-title">🎯 ${data.gameType === 'truth' ? 'PRAWDA' : 'WYZWANIE'}</div><div class="game-content">${data.content}</div></div>`;
+        const title = data.gameType === 'truth18' ? '🔞 PRAWDA 18+' : data.gameType === 'truth' ? '🎯 PRAWDA' : '🎯 WYZWANIE';
+        const titleClass = data.gameType === 'truth18' ? 'game-title-18' : 'game-title';
+        chat.innerHTML += `<div class="msg-game"><div class="${titleClass}">${title}</div><div class="game-content">${data.content}</div></div>`;
       } else if (data.type === 'this-or-that') {
         chat.innerHTML += `<div class="msg-game"><div class="game-title">🃏 TEN CZY TAMTEN</div><div class="game-content">${data.optionA} vs ${data.optionB}</div></div>`;
       } else if (data.type === 'rps-result') {
@@ -242,6 +412,12 @@
 
     socket.on('rps-waiting', () => {
       addSystemMsg('⏳ Czekam na wybór rozmówcy...');
+    });
+
+    socket.on('request-18', () => {
+      i18other = true;
+      addSystemMsg('🔔 Rozmówca chce włączyć tryb 18+! Kliknij przycisk jeśli też chcesz.');
+      check18Both();
     });
 
     socket.on('reveal-request', () => {
@@ -268,14 +444,10 @@
       document.getElementById('status').textContent = '⚠️ Szukam nowego rozmówcy...';
       myRoom = null;
       resetChat();
-      socket.emit('join', { avatar: myAvatar, name: myName });
+      const language = document.getElementById('select-language').value;
+      const country = document.getElementById('select-country').value;
+      socket.emit('join', { avatar: myAvatar, name: myName, gender: myGender, lookingFor: myLooking, language, country });
     });
-
-    function addSystemMsg(text) {
-      const chat = document.getElementById('chat');
-      chat.innerHTML += `<div class="msg-system">${text}</div>`;
-      chat.scrollTop = chat.scrollHeight;
-    }
 
     function playTruthOrDare() {
       const isTruth = Math.random() > 0.5;
@@ -284,7 +456,8 @@
         : dares[Math.floor(Math.random() * dares.length)];
       socket.emit('game-event', { room: myRoom, type: 'truth-or-dare', gameType: isTruth ? 'truth' : 'dare', content });
       const chat = document.getElementById('chat');
-      chat.innerHTML += `<div class="msg-game"><div class="game-title">🎯 ${isTruth ? 'PRAWDA' : 'WYZWANIE'}</div><div class="game-content">${content}</div></div>`;
+      const title = isTruth ? '🎯 PRAWDA' : '🎯 WYZWANIE';
+      chat.innerHTML += `<div class="msg-game"><div class="game-title">${title}</div><div class="game-content">${content}</div></div>`;
       chat.scrollTop = chat.scrollHeight;
     }
 
@@ -299,9 +472,33 @@
     function playRPS() {
       const choices = ['✊ Kamień', '✌️ Nożyce', '🖐️ Papier'];
       const choice = choices[Math.floor(Math.random() * choices.length)];
-      rpsChoice = choice;
       socket.emit('rps-choice', { room: myRoom, choice });
       addSystemMsg(`Twój wybór: ${choice} — czekam na rozmówcę...`);
+    }
+
+    function request18() {
+      if (i18want) return;
+      i18want = true;
+      socket.emit('request-18', { room: myRoom });
+      document.getElementById('btn-18').textContent = '⏳ Czekam na zgodę rozmówcy...';
+      check18Both();
+    }
+
+    function check18Both() {
+      if (i18want && i18other) {
+        document.getElementById('btn-18').textContent = '🔞 Losuj pytanie 18+';
+        document.getElementById('btn-18').classList.add('active');
+        document.getElementById('btn-18').onclick = playTruth18;
+        addSystemMsg('🔞 Oboje zgodziliście się na tryb 18+!');
+      }
+    }
+
+    function playTruth18() {
+      const q = truthQuestions18[Math.floor(Math.random() * truthQuestions18.length)];
+      socket.emit('game-event', { room: myRoom, type: 'truth-or-dare', gameType: 'truth18', content: q });
+      const chat = document.getElementById('chat');
+      chat.innerHTML += `<div class="msg-game"><div class="game-title-18">🔞 PRAWDA 18+</div><div class="game-content">${q}</div></div>`;
+      chat.scrollTop = chat.scrollTop = chat.scrollHeight;
     }
 
     function requestReveal() {
@@ -326,7 +523,10 @@
       document.getElementById('controls').style.display = 'none';
       document.getElementById('btn-row').style.display = 'none';
       document.getElementById('games-row').style.display = 'none';
-      socket.emit('join', { avatar: myAvatar, name: myName });
+      document.getElementById('games-row-18').style.display = 'none';
+      const language = document.getElementById('select-language').value;
+      const country = document.getElementById('select-country').value;
+      socket.emit('join', { avatar: myAvatar, name: myName, gender: myGender, lookingFor: myLooking, language, country });
     }
 
     function send() {
