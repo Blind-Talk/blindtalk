@@ -8,46 +8,24 @@ const io = new Server(server);
 
 app.use(express.static('public'));
 
-let waitingUsers = {};
-
-function findMatch(socket, userData) {
-  const { gender, lookingFor, language, country } = userData;
-  
-  const queues = [
-    `${language}_${country}_${lookingFor}`,
-    `${language}_any_${lookingFor}`,
-    `any_any_${lookingFor}`,
-    `${language}_${country}_any`,
-    `${language}_any_any`,
-    `any_any_any`
-  ];
-
-  for (const queue of queues) {
-    if (waitingUsers[queue] && waitingUsers[queue].id !== socket.id) {
-      const partner = waitingUsers[queue];
-      delete waitingUsers[queue];
-      
-      const room = socket.id + '#' + partner.id;
-      socket.join(room);
-      partner.join(room);
-      socket.currentRoom = room;
-      partner.currentRoom = room;
-
-      socket.emit('paired', { room, otherAvatar: partner.userData.avatar, otherGender: partner.userData.gender, isInitiator: true });
-      partner.emit('paired', { room, otherAvatar: socket.userData.avatar, otherGender: socket.userData.gender, isInitiator: false });
-      return;
-    }
-  }
-
-  const myQueue = `${language}_${country}_${lookingFor}`;
-  waitingUsers[myQueue] = socket;
-  socket.emit('waiting');
-}
+let waitingUser = null;
 
 io.on('connection', (socket) => {
   socket.on('join', (data) => {
     socket.userData = data;
-    findMatch(socket, data);
+    if (waitingUser && waitingUser.id !== socket.id) {
+      const room = socket.id + '#' + waitingUser.id;
+      socket.join(room);
+      waitingUser.join(room);
+      socket.currentRoom = room;
+      waitingUser.currentRoom = room;
+      socket.emit('paired', { room, otherAvatar: waitingUser.userData.avatar, otherGender: waitingUser.userData.gender, isInitiator: true });
+      waitingUser.emit('paired', { room, otherAvatar: data.avatar, otherGender: data.gender, isInitiator: false });
+      waitingUser = null;
+    } else {
+      waitingUser = socket;
+      socket.emit('waiting');
+    }
   });
 
   socket.on('message', (data) => {
@@ -74,7 +52,19 @@ io.on('connection', (socket) => {
     socket.to(data.room).emit('partner-left');
     socket.leave(data.room);
     socket.currentRoom = null;
-    findMatch(socket, socket.userData);
+    if (waitingUser && waitingUser.id !== socket.id) {
+      const room = socket.id + '#' + waitingUser.id;
+      socket.join(room);
+      waitingUser.join(room);
+      socket.currentRoom = room;
+      waitingUser.currentRoom = room;
+      socket.emit('paired', { room, otherAvatar: waitingUser.userData.avatar, otherGender: waitingUser.userData.gender, isInitiator: true });
+      waitingUser.emit('paired', { room, otherAvatar: socket.userData.avatar, otherGender: socket.userData.gender, isInitiator: false });
+      waitingUser = null;
+    } else {
+      waitingUser = socket;
+      socket.emit('waiting');
+    }
   });
 
   socket.on('game-event', (data) => {
@@ -105,9 +95,7 @@ io.on('connection', (socket) => {
   });
 
   socket.on('disconnect', () => {
-    Object.keys(waitingUsers).forEach(key => {
-      if (waitingUsers[key] === socket) delete waitingUsers[key];
-    });
+    if (waitingUser === socket) waitingUser = null;
     if (socket.currentRoom) {
       socket.to(socket.currentRoom).emit('partner-left');
     }

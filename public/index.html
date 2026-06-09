@@ -27,11 +27,6 @@
     .gender-btn:hover { border-color: #a855f7; color: white; }
     .gender-btn.selected { border-color: #a855f7; background: #1a0a2e; color: white; }
 
-    .looking-row { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
-    .looking-btn { flex: 1; min-width: 80px; padding: 10px; background: #1a1a2e; border: 2px solid transparent; border-radius: 12px; color: #666; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: 'Inter', sans-serif; }
-    .looking-btn:hover { border-color: #e94560; color: white; }
-    .looking-btn.selected { border-color: #e94560; background: #2a1030; color: white; }
-
     #name-input-area { margin-bottom: 20px; }
     #name-input-area input { padding: 12px 20px; border-radius: 12px; border: 2px solid #222; background: #1a1a2e; color: white; font-size: 15px; width: 100%; text-align: center; outline: none; transition: border 0.2s; font-family: 'Inter', sans-serif; }
     #name-input-area input:focus { border-color: #e94560; }
@@ -165,13 +160,6 @@
       <button class="gender-btn" onclick="selectGender('other', this)">🧑 Inne</button>
     </div>
 
-    <div class="section-label">Szukasz?</div>
-    <div class="looking-row">
-      <button class="looking-btn" onclick="selectLooking('male', this)">👨 Mężczyzny</button>
-      <button class="looking-btn" onclick="selectLooking('female', this)">👩 Kobiety</button>
-      <button class="looking-btn" onclick="selectLooking('any', this)">🌍 Kogokolwiek</button>
-    </div>
-
     <div class="section-label">Twoje imię</div>
     <div id="name-input-area">
       <input id="my-name" type="text" placeholder="Wpisz imię..." maxlength="20" oninput="checkReady()" />
@@ -220,7 +208,6 @@
     let myRoom = null;
     let myAvatar = null;
     let myGender = null;
-    let myLooking = null;
     let myName = null;
     let iWantReveal = false;
     let otherWantsReveal = false;
@@ -347,17 +334,10 @@
       checkReady();
     }
 
-    function selectLooking(looking, el) {
-      myLooking = looking;
-      document.querySelectorAll('.looking-btn').forEach(c => c.classList.remove('selected'));
-      el.classList.add('selected');
-      checkReady();
-    }
-
     function checkReady() {
       const name = document.getElementById('my-name').value.trim();
       const btn = document.getElementById('btn-start');
-      if (myAvatar && myGender && myLooking && name.length > 0) btn.classList.add('active');
+      if (myAvatar && myGender && name.length > 0) btn.classList.add('active');
       else btn.classList.remove('active');
     }
 
@@ -366,7 +346,7 @@
       document.getElementById('screen-avatar').style.display = 'none';
       document.getElementById('screen-chat').style.display = 'flex';
       document.getElementById('my-avatar-display').textContent = myAvatar;
-      socket.emit('join', { avatar: myAvatar, name: myName, gender: myGender, lookingFor: myLooking, language: 'any', country: 'any' });
+      socket.emit('join', { avatar: myAvatar, name: myName, gender: myGender });
     }
 
     function resetChat() {
@@ -466,7 +446,7 @@
       document.getElementById('status').textContent = '⚠️ Szukam nowego rozmówcy...';
       myRoom = null;
       resetChat();
-      socket.emit('join', { avatar: myAvatar, name: myName, gender: myGender, lookingFor: myLooking, language: 'any', country: 'any' });
+      socket.emit('join', { avatar: myAvatar, name: myName, gender: myGender });
     });
 
     function playTruthOrDare() {
@@ -544,7 +524,7 @@
       document.getElementById('btn-row').style.display = 'none';
       document.getElementById('games-row').style.display = 'none';
       document.getElementById('games-row-18').style.display = 'none';
-      socket.emit('join', { avatar: myAvatar, name: myName, gender: myGender, lookingFor: myLooking, language: 'any', country: 'any' });
+      socket.emit('join', { avatar: myAvatar, name: myName, gender: myGender });
     }
 
     function send() {
