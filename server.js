@@ -19,7 +19,7 @@ io.on('connection', (socket) => {
       waitingUser.join(room);
       socket.currentRoom = room;
       waitingUser.currentRoom = room;
-socket.emit('paired', { room, otherAvatar: waitingUser.userData.avatar, isInitiator: true });
+      socket.emit('paired', { room, otherAvatar: waitingUser.userData.avatar, isInitiator: true });
       waitingUser.emit('paired', { room, otherAvatar: data.avatar, isInitiator: false });
       waitingUser = null;
     } else {
@@ -58,8 +58,8 @@ socket.emit('paired', { room, otherAvatar: waitingUser.userData.avatar, isInitia
       waitingUser.join(room);
       socket.currentRoom = room;
       waitingUser.currentRoom = room;
-      socket.emit('paired', { room, otherAvatar: waitingUser.userData.avatar });
-      waitingUser.emit('paired', { room, otherAvatar: socket.userData.avatar });
+      socket.emit('paired', { room, otherAvatar: waitingUser.userData.avatar, isInitiator: true });
+      waitingUser.emit('paired', { room, otherAvatar: socket.userData.avatar, isInitiator: false });
       waitingUser = null;
     } else {
       waitingUser = socket;

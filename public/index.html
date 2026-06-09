@@ -34,8 +34,9 @@
     #status { color: #666; margin-bottom: 14px; font-size: 14px; text-align: center; min-height: 20px; }
 
     #videos { display: flex; gap: 12px; width: 100%; margin-bottom: 14px; }
-    #videos video { flex: 1; border-radius: 12px; background: #1a1a2e; aspect-ratio: 4/3; object-fit: cover; max-height: 180px; }
-    #video-label-me, #video-label-other { font-size: 11px; color: #555; text-align: center; margin-top: 4px; }
+    #videos > div { flex: 1; }
+    #videos video { width: 100%; border-radius: 12px; background: #1a1a2e; aspect-ratio: 4/3; object-fit: cover; max-height: 180px; }
+    .video-label { font-size: 11px; color: #555; text-align: center; margin-top: 4px; }
 
     #avatars-display { display: flex; gap: 50px; margin-bottom: 14px; }
     .avatar-box { display: flex; flex-direction: column; align-items: center; }
@@ -102,11 +103,11 @@
     <div id="videos" style="display:none">
       <div>
         <video id="my-video" muted autoplay playsinline></video>
-        <div id="video-label-me">Ty</div>
+        <div class="video-label">Ty</div>
       </div>
       <div>
         <video id="other-video" autoplay playsinline></video>
-        <div id="video-label-other">Rozmówca</div>
+        <div class="video-label">Rozmówca</div>
       </div>
     </div>
     <div id="avatars-display">
@@ -146,7 +147,17 @@
     const iceServers = {
       iceServers: [
         { urls: 'stun:stun.l.google.com:19302' },
-        { urls: 'stun:stun1.l.google.com:19302' }
+        { urls: 'stun:stun1.l.google.com:19302' },
+        {
+          urls: 'turn:openrelay.metered.ca:80',
+          username: 'openrelayproject',
+          credential: 'openrelayproject'
+        },
+        {
+          urls: 'turn:openrelay.metered.ca:443',
+          username: 'openrelayproject',
+          credential: 'openrelayproject'
+        }
       ]
     };
 
