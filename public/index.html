@@ -16,10 +16,10 @@
     .section-label { font-size: 12px; color: #555; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; text-align: left; }
 
     .avatars { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px; }
-    .avatar-card { aspect-ratio: 1; background: #1a1a2e; border-radius: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; border: 2px solid transparent; transition: all 0.2s; font-size: 36px; }
+    .avatar-card { aspect-ratio: 1; background: #1a1a2e; border-radius: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; border: 2px solid transparent; transition: all 0.2s; font-size: 36px; user-select: none; }
     .avatar-card:hover { border-color: #e94560; transform: scale(1.04); }
     .avatar-card.selected { border-color: #e94560; background: #2a1030; box-shadow: 0 0 16px rgba(233,69,96,0.3); }
-    .avatar-card span { font-size: 10px; margin-top: 4px; color: #666; }
+    .avatar-card span { font-size: 10px; margin-top: 4px; color: #666; pointer-events: none; }
 
     .gender-row { display: flex; gap: 10px; margin-bottom: 20px; }
     .gender-btn { flex: 1; padding: 12px; background: #1a1a2e; border: 2px solid transparent; border-radius: 12px; color: #666; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: 'Inter', sans-serif; }
@@ -30,11 +30,6 @@
     .looking-btn { flex: 1; min-width: 80px; padding: 10px; background: #1a1a2e; border: 2px solid transparent; border-radius: 12px; color: #666; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: 'Inter', sans-serif; }
     .looking-btn:hover { border-color: #e94560; color: white; }
     .looking-btn.selected { border-color: #e94560; background: #2a1030; color: white; }
-
-    .filter-row { display: flex; gap: 10px; margin-bottom: 20px; }
-    .filter-select { flex: 1; padding: 12px; background: #1a1a2e; border: 2px solid #222; border-radius: 12px; color: white; font-size: 14px; font-family: 'Inter', sans-serif; outline: none; cursor: pointer; }
-    .filter-select:focus { border-color: #a855f7; }
-    .filter-select option { background: #1a1a2e; }
 
     #name-input-area { margin-bottom: 20px; }
     #name-input-area input { padding: 12px 20px; border-radius: 12px; border: 2px solid #222; background: #1a1a2e; color: white; font-size: 15px; width: 100%; text-align: center; outline: none; transition: border 0.2s; font-family: 'Inter', sans-serif; }
@@ -297,12 +292,10 @@
 
     function startChat() {
       myName = document.getElementById('my-name').value.trim();
-     const language = 'any';
-      const country = 'any';
       document.getElementById('screen-avatar').style.display = 'none';
       document.getElementById('screen-chat').style.display = 'flex';
       document.getElementById('my-avatar-display').textContent = myAvatar;
-      socket.emit('join', { avatar: myAvatar, name: myName, gender: myGender, lookingFor: myLooking, language, country });
+      socket.emit('join', { avatar: myAvatar, name: myName, gender: myGender, lookingFor: myLooking, language: 'any', country: 'any' });
     }
 
     function resetChat() {
@@ -397,14 +390,12 @@
       chat.scrollTop = chat.scrollHeight;
     });
 
-    socket.on('', () => {
+    socket.on('partner-left', () => {
       addSystemMsg('⚠️ Rozmówca się rozłączył.');
       document.getElementById('status').textContent = '⚠️ Szukam nowego rozmówcy...';
       myRoom = null;
       resetChat();
-      const language = document.getElementById('select-language').value;
-      const country = document.getElementById('select-country').value;
-      socket.emit('join', { avatar: myAvatar, name: myName, gender: myGender, lookingFor: myLooking, language, country });
+      socket.emit('join', { avatar: myAvatar, name: myName, gender: myGender, lookingFor: myLooking, language: 'any', country: 'any' });
     });
 
     function playTruthOrDare() {
@@ -456,7 +447,7 @@
       socket.emit('game-event', { room: myRoom, type: 'truth-or-dare', gameType: 'truth18', content: q });
       const chat = document.getElementById('chat');
       chat.innerHTML += `<div class="msg-game"><div class="game-title-18">🔞 PRAWDA 18+</div><div class="game-content">${q}</div></div>`;
-      chat.scrollTop = chat.scrollTop = chat.scrollHeight;
+      chat.scrollTop = chat.scrollHeight;
     }
 
     function requestReveal() {
@@ -473,7 +464,7 @@
       }
     }
 
-    function const language = 'any'; const country = 'any'; {
+    function nextChat() {
       if (myRoom) socket.emit('next', { room: myRoom });
       myRoom = null;
       resetChat();
@@ -482,9 +473,7 @@
       document.getElementById('btn-row').style.display = 'none';
       document.getElementById('games-row').style.display = 'none';
       document.getElementById('games-row-18').style.display = 'none';
-      const language = document.getElementById('select-language').value;
-      const country = document.getElementById('select-country').value;
-      socket.emit('join', { avatar: myAvatar, name: myName, gender: myGender, lookingFor: myLooking, language, country });
+      socket.emit('join', { avatar: myAvatar, name: myName, gender: myGender, lookingFor: myLooking, language: 'any', country: 'any' });
     }
 
     function send() {
