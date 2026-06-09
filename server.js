@@ -19,8 +19,8 @@ io.on('connection', (socket) => {
       waitingUser.join(room);
       socket.currentRoom = room;
       waitingUser.currentRoom = room;
-      socket.emit('paired', { room, otherAvatar: waitingUser.userData.avatar });
-      waitingUser.emit('paired', { room, otherAvatar: data.avatar });
+socket.emit('paired', { room, otherAvatar: waitingUser.userData.avatar, isInitiator: true });
+      waitingUser.emit('paired', { room, otherAvatar: data.avatar, isInitiator: false });
       waitingUser = null;
     } else {
       waitingUser = socket;
@@ -67,6 +67,10 @@ io.on('connection', (socket) => {
     }
   });
 
+  socket.on('webrtc-signal', (data) => {
+    socket.to(data.room).emit('webrtc-signal', data);
+  });
+
   socket.on('disconnect', () => {
     if (waitingUser === socket) waitingUser = null;
     if (socket.currentRoom) {
@@ -75,6 +79,7 @@ io.on('connection', (socket) => {
   });
 });
 
-server.listen(3000, () => {
-  console.log('Serwer działa na http://localhost:3000');
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, () => {
+  console.log('Serwer działa na porcie ' + PORT);
 });
