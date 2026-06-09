@@ -33,18 +33,13 @@
 
     #status { color: #666; margin-bottom: 14px; font-size: 14px; text-align: center; min-height: 20px; }
 
-    #videos { display: flex; gap: 12px; width: 100%; margin-bottom: 14px; }
-    #videos > div { flex: 1; }
-    #videos video { width: 100%; border-radius: 12px; background: #1a1a2e; aspect-ratio: 4/3; object-fit: cover; max-height: 180px; }
-    .video-label { font-size: 11px; color: #555; text-align: center; margin-top: 4px; }
-
     #avatars-display { display: flex; gap: 50px; margin-bottom: 14px; }
     .avatar-box { display: flex; flex-direction: column; align-items: center; }
     .avatar-emoji { font-size: 52px; transition: all 0.6s; line-height: 1; }
     .avatar-box .label { font-size: 12px; color: #555; margin-top: 6px; font-weight: 500; }
     .revealed { font-size: 16px !important; font-weight: 600; color: #e94560; line-height: 1.4; }
 
-    #chat { width: 100%; height: 180px; background: #1a1a2e; border-radius: 14px; padding: 14px; overflow-y: auto; margin-bottom: 10px; border: 1px solid #222; }
+    #chat { width: 100%; height: 220px; background: #1a1a2e; border-radius: 14px; padding: 14px; overflow-y: auto; margin-bottom: 10px; border: 1px solid #222; }
     #chat::-webkit-scrollbar { width: 4px; }
     #chat::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
 
@@ -53,20 +48,27 @@
     .msg-other { text-align: left; margin: 6px 0; }
     .msg-other span { background: #252535; padding: 8px 14px; border-radius: 18px 18px 18px 4px; font-size: 14px; display: inline-block; max-width: 80%; color: #ccc; }
     .msg-system { text-align: center; color: #555; font-size: 12px; margin: 8px 0; font-style: italic; }
+    .msg-game { background: #1a1a2e; border: 1px solid #333; border-radius: 12px; padding: 12px; margin: 8px 0; text-align: center; }
+    .msg-game .game-title { font-size: 12px; color: #a855f7; font-weight: 600; margin-bottom: 6px; }
+    .msg-game .game-content { font-size: 15px; color: white; }
 
     #controls { display: flex; gap: 8px; width: 100%; margin-bottom: 10px; }
     input#input { flex: 1; padding: 12px 16px; border-radius: 12px; border: 2px solid #222; background: #1a1a2e; color: white; font-size: 15px; outline: none; transition: border 0.2s; font-family: 'Inter', sans-serif; }
     input#input:focus { border-color: #e94560; }
     button.send { padding: 12px 20px; background: linear-gradient(135deg, #e94560, #a855f7); color: white; border: none; border-radius: 12px; cursor: pointer; font-size: 15px; font-weight: 600; font-family: 'Inter', sans-serif; }
 
-    #btn-row { display: flex; gap: 10px; width: 100%; }
-    #btn-reveal { flex: 1; padding: 12px; background: transparent; border: 2px solid #e94560; color: #e94560; border-radius: 12px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.3s; font-family: 'Inter', sans-serif; }
+    #btn-row { display: flex; gap: 8px; width: 100%; margin-bottom: 8px; flex-wrap: wrap; }
+    #btn-reveal { flex: 1; padding: 10px; background: transparent; border: 2px solid #e94560; color: #e94560; border-radius: 12px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.3s; font-family: 'Inter', sans-serif; }
     #btn-reveal:hover:not(:disabled) { background: #e94560; color: white; }
     #btn-reveal:disabled { opacity: 0.3; cursor: default; border-color: #444; color: #444; }
-    #btn-next { flex: 1; padding: 12px; background: transparent; border: 2px solid #333; color: #888; border-radius: 12px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.3s; font-family: 'Inter', sans-serif; }
+    #btn-next { flex: 1; padding: 10px; background: transparent; border: 2px solid #333; color: #888; border-radius: 12px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.3s; font-family: 'Inter', sans-serif; }
     #btn-next:hover { border-color: #888; color: white; }
 
-    #reveal-status { font-size: 12px; color: #666; margin-top: 8px; text-align: center; min-height: 18px; }
+    #games-row { display: flex; gap: 8px; width: 100%; margin-bottom: 8px; }
+    .btn-game { flex: 1; padding: 10px; background: transparent; border: 2px solid #a855f7; color: #a855f7; border-radius: 12px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.3s; font-family: 'Inter', sans-serif; }
+    .btn-game:hover { background: #a855f7; color: white; }
+
+    #reveal-status { font-size: 12px; color: #666; margin-top: 4px; text-align: center; min-height: 18px; }
 
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
@@ -100,16 +102,6 @@
   <div id="screen-chat">
     <h1>🎭 BlindTalk</h1>
     <div id="status">Łączenie...</div>
-    <div id="videos" style="display:none">
-      <div>
-        <video id="my-video" muted autoplay playsinline></video>
-        <div class="video-label">Ty</div>
-      </div>
-      <div>
-        <video id="other-video" autoplay playsinline></video>
-        <div class="video-label">Rozmówca</div>
-      </div>
-    </div>
     <div id="avatars-display">
       <div class="avatar-box">
         <div class="avatar-emoji" id="my-avatar-display"></div>
@@ -124,6 +116,11 @@
     <div id="controls" style="display:none">
       <input id="input" placeholder="Napisz wiadomość..." />
       <button class="send" onclick="send()">Wyślij</button>
+    </div>
+    <div id="games-row" style="display:none">
+      <button class="btn-game" onclick="playTruthOrDare()">🎯 Prawda/Wyzwanie</button>
+      <button class="btn-game" onclick="playThisOrThat()">🃏 Ten czy Tamten</button>
+      <button class="btn-game" onclick="playRPS()">✂️ Kamień Nożyce</button>
     </div>
     <div id="btn-row" style="display:none">
       <button id="btn-reveal" onclick="requestReveal()">👁️ Odkryj twarz</button>
@@ -140,72 +137,38 @@
     let myName = null;
     let iWantReveal = false;
     let otherWantsReveal = false;
-    let myStream = null;
-    let peerConnection = null;
-    let isInitiator = false;
+    let rpsChoice = null;
 
-    const iceServers = {
-      iceServers: [
-        { urls: 'stun:stun.l.google.com:19302' },
-        { urls: 'stun:stun1.l.google.com:19302' },
-        {
-          urls: 'turn:openrelay.metered.ca:80',
-          username: 'openrelayproject',
-          credential: 'openrelayproject'
-        },
-        {
-          urls: 'turn:openrelay.metered.ca:443',
-          username: 'openrelayproject',
-          credential: 'openrelayproject'
-        }
-      ]
-    };
+    const truthQuestions = [
+      'Jaką masz największą życiową ambicję?',
+      'Co jest Twoim największym lękiem?',
+      'Jaką masz ukrytą talent?',
+      'Co chciałbyś zmienić w swoim życiu?',
+      'Jaką masz najbardziej zawstydzającą historię?',
+      'Co cię najbardziej śmieszy?',
+      'Jakie jest Twoje największe marzenie?',
+      'Gdybyś mógł podróżować w czasie, dokąd byś poszedł?'
+    ];
 
-    async function startCamera() {
-      try {
-        myStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-        document.getElementById('my-video').srcObject = myStream;
-        document.getElementById('videos').style.display = 'flex';
-      } catch(e) {
-        console.log('Brak kamery:', e);
-      }
-    }
+    const dares = [
+      'Napisz wiersz o swoim awatarze w 30 sekund!',
+      'Opisz swój dzień trzema emoji!',
+      'Napisz coś śmiesznego po angielsku!',
+      'Wyślij najdziwniejsze słowo które znasz!',
+      'Opisz siebie jako postać z bajki!',
+      'Napisz haiku o pogodzie za oknem!'
+    ];
 
-    async function createPeerConnection() {
-      peerConnection = new RTCPeerConnection(iceServers);
-      if (myStream) {
-        myStream.getTracks().forEach(track => peerConnection.addTrack(track, myStream));
-      }
-      peerConnection.ontrack = (event) => {
-        document.getElementById('other-video').srcObject = event.streams[0];
-      };
-      peerConnection.onicecandidate = (event) => {
-        if (event.candidate) {
-          socket.emit('webrtc-signal', { room: myRoom, type: 'candidate', candidate: event.candidate });
-        }
-      };
-    }
-
-    async function startCall() {
-      await createPeerConnection();
-      const offer = await peerConnection.createOffer();
-      await peerConnection.setLocalDescription(offer);
-      socket.emit('webrtc-signal', { room: myRoom, type: 'offer', sdp: offer });
-    }
-
-    socket.on('webrtc-signal', async (data) => {
-      if (!peerConnection) await createPeerConnection();
-      if (data.type === 'offer') {
-        await peerConnection.setRemoteDescription(new RTCSessionDescription(data.sdp));
-        const answer = await peerConnection.createAnswer();
-        await peerConnection.setLocalDescription(answer);
-        socket.emit('webrtc-signal', { room: myRoom, type: 'answer', sdp: answer });
-      } else if (data.type === 'answer') {
-        await peerConnection.setRemoteDescription(new RTCSessionDescription(data.sdp));
-      } else if (data.type === 'candidate') {
-        await peerConnection.addIceCandidate(new RTCIceCandidate(data.candidate));
-      }
-    });
+    const thisOrThat = [
+      ['☕ Kawa', '🍵 Herbata'],
+      ['🌅 Ranek', '🌙 Noc'],
+      ['🍕 Pizza', '🍔 Burger'],
+      ['🎬 Film', '📺 Serial'],
+      ['🏖️ Plaża', '🏔️ Góry'],
+      ['🐱 Kot', '🐶 Pies'],
+      ['📱 Telefon', '💻 Komputer'],
+      ['🎵 Muzyka', '🎮 Gry']
+    ];
 
     function selectAvatar(emoji, el) {
       myAvatar = emoji;
@@ -221,21 +184,18 @@
       else btn.classList.remove('active');
     }
 
-    async function startChat() {
+    function startChat() {
       myName = document.getElementById('my-name').value.trim();
       document.getElementById('screen-avatar').style.display = 'none';
       document.getElementById('screen-chat').style.display = 'flex';
       document.getElementById('my-avatar-display').textContent = myAvatar;
-      await startCamera();
       socket.emit('join', { avatar: myAvatar, name: myName });
     }
 
     function resetChat() {
       iWantReveal = false;
       otherWantsReveal = false;
-      isInitiator = false;
-      if (peerConnection) { peerConnection.close(); peerConnection = null; }
-      document.getElementById('other-video').srcObject = null;
+      rpsChoice = null;
       document.getElementById('chat').innerHTML = '';
       document.getElementById('other-avatar-display').textContent = '❓';
       document.getElementById('other-avatar-display').className = 'avatar-emoji';
@@ -249,23 +209,39 @@
       document.getElementById('status').textContent = '⏳ Czekam na rozmówcę...';
       document.getElementById('controls').style.display = 'none';
       document.getElementById('btn-row').style.display = 'none';
+      document.getElementById('games-row').style.display = 'none';
     });
 
-    socket.on('paired', async (data) => {
+    socket.on('paired', (data) => {
       myRoom = data.room;
-      isInitiator = data.isInitiator;
       resetChat();
       document.getElementById('status').textContent = '🎭 Połączono! Rozmawiasz z ' + data.otherAvatar;
       document.getElementById('other-avatar-display').textContent = data.otherAvatar;
       document.getElementById('controls').style.display = 'flex';
       document.getElementById('btn-row').style.display = 'flex';
-      if (isInitiator && myStream) await startCall();
+      document.getElementById('games-row').style.display = 'flex';
     });
 
     socket.on('message', (data) => {
       const chat = document.getElementById('chat');
       chat.innerHTML += `<div class="msg-other"><span>${data.avatar} ${data.text}</span></div>`;
       chat.scrollTop = chat.scrollHeight;
+    });
+
+    socket.on('game-event', (data) => {
+      const chat = document.getElementById('chat');
+      if (data.type === 'truth-or-dare') {
+        chat.innerHTML += `<div class="msg-game"><div class="game-title">🎯 ${data.gameType === 'truth' ? 'PRAWDA' : 'WYZWANIE'}</div><div class="game-content">${data.content}</div></div>`;
+      } else if (data.type === 'this-or-that') {
+        chat.innerHTML += `<div class="msg-game"><div class="game-title">🃏 TEN CZY TAMTEN</div><div class="game-content">${data.optionA} vs ${data.optionB}</div></div>`;
+      } else if (data.type === 'rps-result') {
+        chat.innerHTML += `<div class="msg-game"><div class="game-title">✂️ KAMIEŃ NOŻYCE PAPIER</div><div class="game-content">${data.result}</div></div>`;
+      }
+      chat.scrollTop = chat.scrollHeight;
+    });
+
+    socket.on('rps-waiting', () => {
+      addSystemMsg('⏳ Czekam na wybór rozmówcy...');
     });
 
     socket.on('reveal-request', () => {
@@ -288,13 +264,45 @@
     });
 
     socket.on('partner-left', () => {
-      const chat = document.getElementById('chat');
-      chat.innerHTML += `<div class="msg-system">⚠️ Rozmówca się rozłączył.</div>`;
+      addSystemMsg('⚠️ Rozmówca się rozłączył.');
       document.getElementById('status').textContent = '⚠️ Szukam nowego rozmówcy...';
       myRoom = null;
       resetChat();
       socket.emit('join', { avatar: myAvatar, name: myName });
     });
+
+    function addSystemMsg(text) {
+      const chat = document.getElementById('chat');
+      chat.innerHTML += `<div class="msg-system">${text}</div>`;
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    function playTruthOrDare() {
+      const isTruth = Math.random() > 0.5;
+      const content = isTruth
+        ? truthQuestions[Math.floor(Math.random() * truthQuestions.length)]
+        : dares[Math.floor(Math.random() * dares.length)];
+      socket.emit('game-event', { room: myRoom, type: 'truth-or-dare', gameType: isTruth ? 'truth' : 'dare', content });
+      const chat = document.getElementById('chat');
+      chat.innerHTML += `<div class="msg-game"><div class="game-title">🎯 ${isTruth ? 'PRAWDA' : 'WYZWANIE'}</div><div class="game-content">${content}</div></div>`;
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    function playThisOrThat() {
+      const pair = thisOrThat[Math.floor(Math.random() * thisOrThat.length)];
+      socket.emit('game-event', { room: myRoom, type: 'this-or-that', optionA: pair[0], optionB: pair[1] });
+      const chat = document.getElementById('chat');
+      chat.innerHTML += `<div class="msg-game"><div class="game-title">🃏 TEN CZY TAMTEN</div><div class="game-content">${pair[0]} vs ${pair[1]}</div></div>`;
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    function playRPS() {
+      const choices = ['✊ Kamień', '✌️ Nożyce', '🖐️ Papier'];
+      const choice = choices[Math.floor(Math.random() * choices.length)];
+      rpsChoice = choice;
+      socket.emit('rps-choice', { room: myRoom, choice });
+      addSystemMsg(`Twój wybór: ${choice} — czekam na rozmówcę...`);
+    }
 
     function requestReveal() {
       if (iWantReveal) return;
@@ -317,6 +325,7 @@
       document.getElementById('status').textContent = '⏳ Szukam nowego rozmówcy...';
       document.getElementById('controls').style.display = 'none';
       document.getElementById('btn-row').style.display = 'none';
+      document.getElementById('games-row').style.display = 'none';
       socket.emit('join', { avatar: myAvatar, name: myName });
     }
 

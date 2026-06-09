@@ -67,8 +67,27 @@ io.on('connection', (socket) => {
     }
   });
 
-  socket.on('webrtc-signal', (data) => {
-    socket.to(data.room).emit('webrtc-signal', data);
+  socket.on('game-event', (data) => {
+    socket.to(data.room).emit('game-event', data);
+  });
+
+  socket.on('rps-choice', (data) => {
+    if (!socket.rpsChoice) {
+      socket.rpsChoice = data.choice;
+      socket.to(data.room).emit('rps-waiting');
+    } else {
+      const room = data.room;
+      const sockets = io.sockets.adapter.rooms.get(room);
+      sockets.forEach(id => {
+        const s = io.sockets.sockets.get(id);
+        if (s && s.id !== socket.id) {
+          const result = getRPSResult(socket.rpsChoice, data.choice);
+          io.to(room).emit('game-event', { type: 'rps-result', result });
+          socket.rpsChoice = null;
+          s.rpsChoice = null;
+        }
+      });
+    }
   });
 
   socket.on('disconnect', () => {
@@ -78,6 +97,16 @@ io.on('connection', (socket) => {
     }
   });
 });
+
+function getRPSResult(a, b) {
+  if (a === b) return `Remis! Oboje wybrali ${a}`;
+  if ((a.includes('Kamień') && b.includes('Nożyce')) ||
+      (a.includes('Nożyce') && b.includes('Papier')) ||
+      (a.includes('Papier') && b.includes('Kamień'))) {
+    return `Gracz 1: ${a} vs Gracz 2: ${b} — Gracz 1 wygrywa! 🏆`;
+  }
+  return `Gracz 1: ${a} vs Gracz 2: ${b} — Gracz 2 wygrywa! 🏆`;
+}
 
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
