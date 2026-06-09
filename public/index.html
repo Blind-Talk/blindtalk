@@ -127,48 +127,6 @@
       <button class="looking-btn" onclick="selectLooking('any', this)">🌍 Kogokolwiek</button>
     </div>
 
-    <div class="section-label">Język i kraj</div>
-    <div class="filter-row">
-      <select class="filter-select" id="select-language" onchange="checkReady()">
-        <option value="any">🌍 Dowolny język</option>
-        <option value="pl">🇵🇱 Polski</option>
-        <option value="en">🇬🇧 English</option>
-        <option value="de">🇩🇪 Deutsch</option>
-        <option value="fr">🇫🇷 Français</option>
-        <option value="es">🇪🇸 Español</option>
-        <option value="it">🇮🇹 Italiano</option>
-        <option value="ru">🇷🇺 Русский</option>
-        <option value="ua">🇺🇦 Українська</option>
-      </select>
-      <select class="filter-select" id="select-country" onchange="checkReady()">
-        <option value="any">🌍 Dowolny kraj</option>
-        <option value="PL">🇵🇱 Polska</option>
-        <option value="US">🇺🇸 USA</option>
-        <option value="GB">🇬🇧 UK</option>
-        <option value="DE">🇩🇪 Niemcy</option>
-        <option value="FR">🇫🇷 Francja</option>
-        <option value="ES">🇪🇸 Hiszpania</option>
-        <option value="IT">🇮🇹 Włochy</option>
-        <option value="UA">🇺🇦 Ukraina</option>
-        <option value="RU">🇷🇺 Rosja</option>
-        <option value="CZ">🇨🇿 Czechy</option>
-        <option value="SK">🇸🇰 Słowacja</option>
-        <option value="HU">🇭🇺 Węgry</option>
-        <option value="RO">🇷🇴 Rumunia</option>
-        <option value="NL">🇳🇱 Holandia</option>
-        <option value="SE">🇸🇪 Szwecja</option>
-        <option value="NO">🇳🇴 Norwegia</option>
-        <option value="DK">🇩🇰 Dania</option>
-        <option value="FI">🇫🇮 Finlandia</option>
-        <option value="TR">🇹🇷 Turcja</option>
-        <option value="BR">🇧🇷 Brazylia</option>
-        <option value="IN">🇮🇳 Indie</option>
-        <option value="JP">🇯🇵 Japonia</option>
-        <option value="KR">🇰🇷 Korea</option>
-        <option value="CN">🇨🇳 Chiny</option>
-      </select>
-    </div>
-
     <div class="section-label">Twoje imię</div>
     <div id="name-input-area">
       <input id="my-name" type="text" placeholder="Wpisz imię..." maxlength="20" oninput="checkReady()" />
@@ -339,8 +297,8 @@
 
     function startChat() {
       myName = document.getElementById('my-name').value.trim();
-      const language = document.getElementById('select-language').value;
-      const country = document.getElementById('select-country').value;
+     const language = 'any';
+      const country = 'any';
       document.getElementById('screen-avatar').style.display = 'none';
       document.getElementById('screen-chat').style.display = 'flex';
       document.getElementById('my-avatar-display').textContent = myAvatar;
@@ -439,7 +397,7 @@
       chat.scrollTop = chat.scrollHeight;
     });
 
-    socket.on('partner-left', () => {
+    socket.on('', () => {
       addSystemMsg('⚠️ Rozmówca się rozłączył.');
       document.getElementById('status').textContent = '⚠️ Szukam nowego rozmówcy...';
       myRoom = null;
@@ -515,7 +473,7 @@
       }
     }
 
-    function nextChat() {
+    function const language = 'any'; const country = 'any'; {
       if (myRoom) socket.emit('next', { room: myRoom });
       myRoom = null;
       resetChat();
